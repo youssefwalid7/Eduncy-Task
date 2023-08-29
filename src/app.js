@@ -5,7 +5,6 @@ import authRoutes from './routes/authRoutes.js'
 import apiRoutes from './routes/apiRoutes.js'
 const app = express();
 
-
 // Use the bodyParser middleware to parse incoming JSON data
 app.use(bodyParser.json());
 

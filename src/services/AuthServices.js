@@ -1,9 +1,7 @@
 import AmazonCognito from 'amazon-cognito-identity-js'
 import pooldata from '../config/cognito.js'
+import { SaveUser } from './dbServices.js';
 const userPool = new AmazonCognito.CognitoUserPool(pooldata);
-
-
-
 
 // User sign-up function (cognito logic)
 export const signup = async (UserName, Email, Password) => {
@@ -40,20 +38,22 @@ export const signup = async (UserName, Email, Password) => {
 
 
 // Function to verify user's email using confirmation code
-export const verifyEmail = async (Email, Code) => {
+export const verifyEmail = async (Name, Email, Code) => {
     var userData = {
         Username: Email,
         Pool: userPool,
     };
     var cognitoUser = new AmazonCognito.CognitoUser(userData);
+    console.log(Name)
+    console.log(Email)
+    console.log(Code)
     cognitoUser.confirmRegistration(Code, true, function (err, result) {
         if (err) {
             console.error(err.message || JSON.stringify(err));
             return;
         } else {
-            // SaveUser(Email)
+            SaveUser(Name, Email)
             console.log('email verified');
-
         }
     });
 }
@@ -122,16 +122,4 @@ export const signout = async () => {
             console.error(err)
         }
     });
-}
-
-export const refresh_token = async () => {
-    var cognitoUser = userPool.getCurrentUser();
-    cognitoUser.getSession((err, result) => {
-        if (result) {
-            console.log(result.getRefreshToken())
-        } else {
-            console.error(err)
-        }
-    });
-
 }

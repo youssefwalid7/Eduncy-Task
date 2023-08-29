@@ -23,3 +23,12 @@ SERVER_PORT=
 USER_POOL_ID=
 CLIENT_ID=
 MONGO_DB=
+
+
+## How Does the App Work
+
+- Users signs up using a username,email,password 
+- Aws cognito does the work sends him an email with 6 digits code to verify his/her email
+- User verfies mail by the code and is saved in DB after verifying 
+- User signs in and retrives JWT token for authorization
+- User can preform all CRUD operations for posts after validating the token 

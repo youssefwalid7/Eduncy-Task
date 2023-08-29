@@ -1,6 +1,5 @@
-import { verifyEmail, resendCode, signin, signout, refresh_token, signup } from '../services/AuthServices.js'
+import { verifyEmail, resendCode, signin, signout, signup } from '../services/AuthServices.js'
 import emailRegex from "../utils/constants.js";
-import jwt from 'jsonwebtoken';
 
 // Handle user sign-up
 export const AuthSignup = async (req, res) => {
@@ -12,7 +11,7 @@ export const AuthSignup = async (req, res) => {
             console.log("password must be at least 8 characters")
         } else {
             const user = await signup(preferred_username, email, password);
-            res.json(user);
+            res.status(200).json({ message: "you signed up successfully" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -22,12 +21,12 @@ export const AuthSignup = async (req, res) => {
 // Verify user's email with a verification code
 export const AuthverifyEmail = async (req, res) => {
     try {
-        const { email, code } = req.body;
+        const { name, email, code } = req.body;
         if (!code || code.length < 6) {
             console.error("please enter a vaild 6 digits code")
         } else {
-            const user = await verifyEmail(email, code);
-            res.json(user);
+            const user = await verifyEmail(name, email, code);
+            res.status(200).json({ message: "email verified" });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -75,14 +74,4 @@ export const AuthSignout = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
-
-export const refreshToken = async (req, res) => {
-    try {
-        const result = await refresh_token();
-        res.status(200).json({ message: result })
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-
 }

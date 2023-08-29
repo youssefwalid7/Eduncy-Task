@@ -23,13 +23,11 @@ export const verifyCognitoToken = async (req, res, next) => {
     }
     // Extract the token from the "Bearer" prefix
     const token = authorizationHeader.split(' ')[1];
-
     const user = jwt.decode(token, { complete: true });
     const keys = await getCognitoPublicKeys()
     for (let i = 0; i < keys.length; i++) {
         if (keys[i].kid == user.header.kid) {
-            console.log(user.payload['cognito:groups'][0])
-            // return next();
+            return next();
         }
         else {
             return res.status(401).json({ message: 'Not Authorized' });
